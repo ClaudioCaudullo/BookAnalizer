@@ -1,0 +1,6 @@
+Relazione:
+-obiettivi e requisiti
+-tool usati
+-descrizione del sistema software con descrizione classi,diagramma uml,diagramma di flusso
+-mostrare dei risultati
+
