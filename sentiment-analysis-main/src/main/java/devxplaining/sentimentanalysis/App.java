@@ -148,9 +148,9 @@ public class App extends JFrame {
                     List<String> text = new ArrayList<>();
                     Chapter secondChapter=chapters.get(j);
                     firstChapter.mostValuableWords.forEach((key,value)->{
-                        if(secondChapter.mostValuableWords.containsKey(key))
+                        if(secondChapter.mostValuableWords.containsKey(key)) //trovo una parola in comune
                         {
-                            text.add(value.getWord()+",");
+                            text.add(value.getWord()+","); //la conservo
                         }
                     });
                     if(text.size()>0) //Se c'è almeno una mostValuableWord in comune, collego i due vertici.

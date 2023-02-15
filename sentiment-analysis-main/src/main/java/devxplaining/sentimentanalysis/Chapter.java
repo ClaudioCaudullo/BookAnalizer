@@ -189,8 +189,9 @@ public class Chapter {
 
     public void display() //Stampo a schermo i dati del capitolo
     {
-        JFrame frame = new JFrame("CHAPTER "+chapterNumber);
+        JFrame frame = new JFrame("CHAPTER "+chapterNumber); //Creo il frame
 
+        //Setto la label principali che descriveranno le 3 parti principali del frame
         JLabel label1=new JLabel("Full text",SwingConstants.CENTER);
         label1.setFont(new Font("Serif", Font.CENTER_BASELINE, 20));
 
@@ -200,26 +201,30 @@ public class Chapter {
         JLabel label3=new JLabel("Most valuable words (words are stemmatized)");
         label3.setFont(new Font("Serif", Font.CENTER_BASELINE, 20));
 
+        //Imposto la parte sinistra del frame, ovvero quella contenente il testo del capitolo
         String formatted = chapterText.replace("\n", "<br>"); //formatto il testo completo del capitolo
         formatted = "<html><font size='3'>" + formatted + "</font></html>";
         JLabel text = new JLabel(formatted);
+        //aggiungo uno scroller per far entrare il tutto
         JScrollPane scrollerText = new JScrollPane(text, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED); //aggiungo uno scroller
         JPanel leftPanel=new JPanel();
         leftPanel.setLayout((new BoxLayout(leftPanel,BoxLayout.PAGE_AXIS)));
         leftPanel.add(label1);
         leftPanel.add(scrollerText);
 
-        JTable midTable= new JTable(singleWords.size(),3); //tabella centrale delle parole
+        //Imposto la parte centrale del frame, ovvero quella contenente la tabella delle parole non stop-words presenti nel capitolo
+        JTable midTable= new JTable(singleWords.size(),3);
         midTable.getColumnModel().getColumn(0).setHeaderValue("WORD");
         midTable.getColumnModel().getColumn(1).setHeaderValue("APPEARANCES");
         midTable.getColumnModel().getColumn(2).setHeaderValue("SENTIMENT");
         int[] row=new int[1];
         row[0]=0;
-        singleWords.forEach((key,stats)->{
+        singleWords.forEach((key,stats)->{ //Per ogni parola
             if(!key.equals("") || !key.equals(" "))
             {
-                midTable.setValueAt(key,row[0],0);
-                midTable.setValueAt(stats.getAppearances(),row[0],1);
+                midTable.setValueAt(key,row[0],0); //Imposto il valore della prima colonna con la parola
+                midTable.setValueAt(stats.getAppearances(),row[0],1); //Imposto il valore della seconda colonna con le apparizioni
+                //Imposto il valore della terza colonna con il valore sentimentale convertendolo da intero a stringa
                 switch ((int) stats.getSentimentValue()) //converto il valore sentimentale intero in stringa
                 {
                     case 1:
@@ -238,14 +243,14 @@ public class Chapter {
                 row[0]++;
             }
         });
-
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment( SwingConstants.CENTER );
+         //aggiungo uno scroller alla tabella
         JScrollPane scrollerMidTable = new JScrollPane(midTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        //aggiungo una label sopra la tabella
         JPanel centerPanel=new JPanel();
         centerPanel.setLayout((new BoxLayout(centerPanel,BoxLayout.PAGE_AXIS)));
         centerPanel.add(label2);
         centerPanel.add(scrollerMidTable);
+        //imposto il render delle parole interne alla tabella centrandole nelle celle
         DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
         rightRenderer.setHorizontalAlignment(SwingConstants.CENTER);
         TableModel tableModel = midTable.getModel();
@@ -254,6 +259,8 @@ public class Chapter {
             midTable.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
         }
 
+        //Imposto la parte destra del frame, ovvero quella contenente la tabella delle x parole più significative
+        //Applico la stessa logica di popolamento e struttura della precedente tabella
         JTable rightTable= new JTable(mostValuableWords.size(),2);
         rightTable.getColumnModel().getColumn(0).setHeaderValue("WORD");
         rightTable.getColumnModel().getColumn(1).setHeaderValue("APPEARANCES");
@@ -263,7 +270,6 @@ public class Chapter {
             rightTable.setValueAt(stats.getAppearances(),row[0],1);
             row[0]++;
         });
-        rightTable.setDefaultRenderer(String.class, centerRenderer);
         JScrollPane scrollerRightTable = new JScrollPane(rightTable, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         JPanel rightPanel=new JPanel();
         rightPanel.setLayout((new BoxLayout(rightPanel,BoxLayout.PAGE_AXIS)));
@@ -275,7 +281,7 @@ public class Chapter {
             rightTable.getColumnModel().getColumn(columnIndex).setCellRenderer(rightRenderer);
         }
 
-
+        //Aggiungo tutti gli elementi al frame principale e visualizzo
         frame.setLayout(new BorderLayout(50,100));
         frame.add(centerPanel, BorderLayout.CENTER);
         frame.add(leftPanel, BorderLayout.WEST);
